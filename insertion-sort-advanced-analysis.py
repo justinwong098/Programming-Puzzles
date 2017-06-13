@@ -1,27 +1,46 @@
+# NOTE: this is not my code. I stole everything below.
+#       I only slightly optimized mergesort; I added local variables to hold the value of len(ar) to reduce recomputation
 
-def get_input_lists():
-    T = int(input())
-    all_lists = []
-    for entry in range(T):
-        size = int(input())
-        unsorted_list = list(map(int, input().split(" ")))        
-        all_lists.append(unsorted_list)
-    return all_lists
+def mergesort(ar, length):
+    ic=0
+    if length>1:
+        mid=len(ar)//2
+        left,right=ar[:mid],ar[mid:]
+        length_left = mid
+        length_right = length - mid
+        ic+=mergesort(left, length_left)
+        ic+=mergesort(right, length_right)
+        i=j=k=0
+        while i<length_left and j<length_right:
+            if left[i]<=right[j]:
+                ar[k]=left[i]
+                i+=1
+            else:
+                ar[k]=right[j]
+                j+=1
+                ic+=mid-i
+            k+=1
+        while i<length_left:
+            ar[k]=left[i]
+            i+=1
+            k+=1
+        while j<length_right:
+            ar[k]=right[j]
+            j+=1
+            k+=1
+    return ic
+# n = int(input())
+# for iterate in range( n ):
+#     size = int(input())
+#     a = [ int( i ) for i in input().strip().split() ]
+#     answer = mergesort(a, size)
+#     # Write code to compute answer using x, a and answer
+#     print(answer)
 
-def count_shifts(lists):
-    for lst in lists:
-        num_shifts = 0
-        for i in range(1,len(lst)):    #since we want to swap an item with previous one, we start from 1
-            j = i                    #bcoz reducing i directly will mess our for loop, so we reduce its copy j instead
-            while j > 0 and lst[j] < lst[j-1]: #j>0 bcoz no point going till k[0] since there is no value to its left to be swapped
-                lst[j], lst[j-1] = lst[j-1], lst[j] #syntactic sugar: swap the items, if right one is smaller.
-                j=j-1 #take k[j] all the way left to the place where it has a smaller/no value to its left.
-                num_shifts += 1
-        print(num_shifts)
-    
-    
 
-count_shifts(get_input_lists())
-
-  
-    
+import random
+list0 = random.sample(range(10000000), 100000)
+list2 = [2,1,3,1,2]
+list3 = [6,5,3,1,8,7,2,4]
+lst = list3
+print(mergesort(lst, len(lst)))
